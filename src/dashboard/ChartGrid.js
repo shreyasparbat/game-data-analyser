@@ -27,6 +27,8 @@ const componentList = {
   d: LineReChart,
 }
 
+const rowHeight = 120
+
 function getFromLS(key) {
   let ls = {}
   if (global.localStorage) {
@@ -58,8 +60,11 @@ export default function ChartGrid() {
   // Layout State
   const [layouts, setLayouts] = useState(getFromLS('layouts') || initialLayouts)
 
+  // To know which breakpoint to use in layouts
+  const [currentBreakpoint, setCurrentBreakout] = useState('lg')
+
   // Update layout state
-  const onLayoutChange = (_, allLayouts) => {
+  const onLayoutChange = (currentLayout, allLayouts) => {
     setLayouts(allLayouts)
   }
 
@@ -78,6 +83,10 @@ export default function ChartGrid() {
     setItems([...items, itemId])
   }
 
+  const onBreakpointChange = (newBreakpoint) => {
+    setCurrentBreakout(newBreakpoint)
+  }
+
   return (
     <>
       <TopBar
@@ -92,23 +101,32 @@ export default function ChartGrid() {
         layout={layouts}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-        rowHeight={60}
+        rowHeight={rowHeight}
+        aspect
         width={width}
+        onLayoutChange={onLayoutChange}
+        onBreakpointChange={onBreakpointChange}
       >
-        {items.map((key) => (
-          <div
-            key={key}
-            className="widget"
-            data-grid={{ w: 3, h: 2, x: 0, y: Infinity }}
-          >
-            <ChartCard
-              id={key}
-              onRemoveItem={onRemoveItem}
-              component={componentList[key]}
-              backgroundColor='black'
-            />
-          </div>
-        ))}
+        {items.map((key) => {
+          const thisBreak = layouts[currentBreakpoint]
+          const thisLayout = thisBreak ? thisBreak.find(l => l.i == key) : null
+          const h = thisLayout ? thisLayout.h : 3
+          const height = h * rowHeight - 70
+          return (
+            <div
+              key={key}
+              className="widget"
+              data-grid={{ w: 3, h: 2, x: 0, y: Infinity }}
+            >
+              <ChartCard
+                id={key}
+                onRemoveItem={onRemoveItem}
+                component={componentList[key]}
+                h={height}
+              />
+            </div>
+          )
+        })}
       </ResponsiveGridLayout>
     </>
   )

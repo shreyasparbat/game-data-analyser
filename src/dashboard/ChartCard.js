@@ -8,7 +8,7 @@ const widgetNames = {
   c: 'Bar Chart',
   d: 'Scatter Chart',
 }
-export default function ChartCard({ id, onRemoveItem, component: Item }) {
+export default function ChartCard({ id, onRemoveItem, component: Item, h }) {
   return (
     <Card width="100%" height="100%" display="flex">
       <Box
@@ -26,7 +26,7 @@ export default function ChartCard({ id, onRemoveItem, component: Item }) {
         </IconButton>
       </Box>
       <Box padding="0.5rem" flexGrow={1}>
-        <Item />
+        <Item h={h}/>
       </Box>
     </Card>
   )

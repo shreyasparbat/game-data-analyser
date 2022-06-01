@@ -18,7 +18,7 @@ const Header = () => {
             <Stream />
           </Icon>
           <Typography variant="h5" noWrap color="red" fontFamily='monospace'>
-            STREAMiT
+            KOMO Track
           </Typography>
         </Box>
       </Toolbar>
