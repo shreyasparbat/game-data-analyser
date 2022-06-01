@@ -22,7 +22,7 @@ export default function TopBar({
         <IconButton aria-label="save" onClick={onLayoutSave}>
           <Save />
         </IconButton>
-        <IconButton aria-label="load" onClick={}>
+        <IconButton aria-label="load" onClick={() => {}}>
           <Download />
         </IconButton>
       </Box>

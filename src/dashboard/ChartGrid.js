@@ -5,6 +5,7 @@ import '/node_modules/react-resizable/css/styles.css'
 import useWindowDimensions from '../util/useWindowDimensions'
 import TopBar from './TopBar'
 import LineReChart from './charts/LineReChart'
+import ChartCard from './ChartCard'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
@@ -21,9 +22,9 @@ const initialLayouts = {
 
 const componentList = {
   a: LineReChart,
-  b: <Widget id="b" backgroundColor="#fff5ab" />,
-  c: <Widget id="c" backgroundColor="#ffcead" />,
-  d: <Widget id="d" backgroundColor="#c449c2" />,
+  b: LineReChart,
+  c: LineReChart,
+  d: LineReChart,
 }
 
 function getFromLS(key) {
@@ -100,21 +101,15 @@ export default function ChartGrid() {
             className="widget"
             data-grid={{ w: 3, h: 2, x: 0, y: Infinity }}
           >
-            <Widget
+            <ChartCard
               id={key}
               onRemoveItem={onRemoveItem}
               component={componentList[key]}
+              backgroundColor='black'
             />
           </div>
         ))}
       </ResponsiveGridLayout>
     </>
-  )
-}
-function Widget({ id, backgroundColor }) {
-  return (
-    <div style={{ width: '100%', height: '100%', backgroundColor }}>
-      {componentList[id]}
-    </div>
   )
 }
