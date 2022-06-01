@@ -1,14 +1,14 @@
 import React from 'react'
-import Header from './Header'
+import Header from '../layout/Header'
 import ChartGrid from './ChartGrid'
 import { Box } from '@mui/material'
 
 const Dashboard = () => {
   return (
-    <div>
+    <Box sx={{width: '100%', height: '100%'}}>
       <Header />
       <ChartGrid />
-    </div>
+    </Box>
   )
 }
 
