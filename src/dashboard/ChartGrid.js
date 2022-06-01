@@ -1,9 +1,10 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import '/node_modules/react-grid-layout/css/styles.css'
 import '/node_modules/react-resizable/css/styles.css'
 import useWindowDimensions from '../util/useWindowDimensions'
 import TopBar from './TopBar'
+import LineReChart from './charts/LineReChart'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
@@ -19,7 +20,7 @@ const initialLayouts = {
 }
 
 const componentList = {
-  a: <Widget id="a" backgroundColor="#867ae9" />,
+  a: LineReChart,
   b: <Widget id="b" backgroundColor="#fff5ab" />,
   c: <Widget id="c" backgroundColor="#ffcead" />,
   d: <Widget id="d" backgroundColor="#c449c2" />,
@@ -112,6 +113,8 @@ export default function ChartGrid() {
 }
 function Widget({ id, backgroundColor }) {
   return (
-    <div style={{ width: '100%', height: '100%', backgroundColor }}>{id}</div>
+    <div style={{ width: '100%', height: '100%', backgroundColor }}>
+      {componentList[id]}
+    </div>
   )
 }
