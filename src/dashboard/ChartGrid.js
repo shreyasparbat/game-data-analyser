@@ -63,6 +63,9 @@ export default function ChartGrid() {
   // To know which breakpoint to use in layouts
   const [currentBreakpoint, setCurrentBreakout] = useState('lg')
 
+  // 
+  const [currentView, setCurrentView] = useState(null)
+
   // Update layout state
   const onLayoutChange = (currentLayout, allLayouts) => {
     setLayouts(allLayouts)

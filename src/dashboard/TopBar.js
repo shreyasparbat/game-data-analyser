@@ -43,12 +43,12 @@ export default function TopBar({
           <IconButton aria-label="load" onClick={() => {}}>
             <Download />
           </IconButton>
-          <IconButton aria-label="add" onClick={() => setOpen(true)}>
+          <IconButton aria-label="add" onClick={handleClickOpen}>
             <Add />
           </IconButton>
         </Box>
       </Card>
-      <NewViewDialog open={open} />
+      <NewViewDialog open={open} handleClose={handleClose}/>
     </>
   )
 }

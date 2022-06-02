@@ -6,24 +6,34 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import {createView} from '../../services/api'
+import { createView } from '../../services/api'
 
 export default function NewViewDialog({ open, handleClose }) {
   const [name, setName] = useState('')
 
+  // Close dialog gracefully
+  const closeDialog = () => {
+    // Reset state (to avoid a bug)
+    setName('')
+
+    // Parent closing handler
+    handleClose()
+  }
+
+  // Fire create view API
   const newView = () => {
     // Create a new view using API
     createView({
       name,
-      layout: {}
-    });
+      layout: {},
+    })
 
-    // Save after closing
-    handleClose()
+    // Close this dialog
+    closeDialog()
   }
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={closeDialog}>
       <DialogTitle>New View</DialogTitle>
       <DialogContent>
         <DialogContentText>Give your new view a name</DialogContentText>
@@ -39,7 +49,9 @@ export default function NewViewDialog({ open, handleClose }) {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Save</Button>
+        <Button onClick={newView} disabled={name === ''}>
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   )

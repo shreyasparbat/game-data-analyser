@@ -2,4 +2,8 @@ import axios from 'axios'
 
 const baseUrl = 'https://us-central1-ethlas-test.cloudfunctions.net/'
 
-exports.createView = (view) => axios.post(baseUrl + 'createView', {view})
+const createView = (view) => axios.post(baseUrl + 'views-createView', {view})
+
+export {
+    createView
+}
