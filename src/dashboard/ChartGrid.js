@@ -83,8 +83,13 @@ export default function ChartGrid() {
     setItems([...items, itemId])
   }
 
+  // Notify breakpoint changes
   const onBreakpointChange = (newBreakpoint) => {
     setCurrentBreakout(newBreakpoint)
+  }
+
+  const saveView = (name) => {
+
   }
 
   return (
@@ -95,6 +100,7 @@ export default function ChartGrid() {
         onRemoveItem={onRemoveItem}
         onAddItem={onAddItem}
         originalItems={originalItems}
+        saveView={saveView}
       />
       <ResponsiveGridLayout
         className="layout"
