@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton'
 import TextField from '@mui/material/TextField'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -8,13 +8,17 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { createView } from '../../services/api'
 
-export default function NewViewDialog({ open, handleClose }) {
+export default function NewViewDialog({ open, handleClose, changeC }) {
   const [name, setName] = useState('')
+  const [loading, setLoading] = useState(false)
 
   // Close dialog gracefully
   const closeDialog = () => {
     // Reset state (to avoid a bug)
     setName('')
+
+    // Reset loading
+    setLoading(false)
 
     // Parent closing handler
     handleClose()
@@ -22,14 +26,19 @@ export default function NewViewDialog({ open, handleClose }) {
 
   // Fire create view API
   const newView = () => {
+    setLoading(true)
+
     // Create a new view using API
     createView({
       name,
       layout: {},
-    })
+    }).then(({id}) => {
+      // Change current view
+      changeCurrentView(id)
 
-    // Close this dialog
-    closeDialog()
+      // Close this dialog
+      closeDialog()
+    })
   }
 
   return (
@@ -46,12 +55,17 @@ export default function NewViewDialog({ open, handleClose }) {
           variant="standard"
           required
           onChange={(e) => setName(e.target.value)}
+          disabled={loading}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={newView} disabled={name === ''}>
+        <LoadingButton
+          onClick={newView}
+          loading={loading}
+          disabled={name === ''}
+        >
           Save
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )

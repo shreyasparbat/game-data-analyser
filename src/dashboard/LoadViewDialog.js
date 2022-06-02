@@ -1,17 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
+import Box from '@mui/material/Box'
 import { List } from '@mui/material'
-import { createView, readViewsInfo } from '../../services/api'
+import { readViewsInfo } from '../../services/api'
 
 export default function NewViewDialog({ open, handleClose,changeCurrentView }) {
   // To store view names available
   const [viewsInfo, setViewsInfo] = useState([])
 
   // Populate available view names
-  useEffect(() => {
-    setViewsInfo(readViewsInfo())
+  useEffect(async () => {
+    const v = await readViewsInfo()
+    setViewsInfo(v)
+    console.log(v)
   })
 
   // Switch to this view

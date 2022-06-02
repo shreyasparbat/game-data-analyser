@@ -60,7 +60,11 @@ export default function TopBar({
           </IconButton>
         </Box>
       </Card>
-      <NewViewDialog open={open} handleClose={handleClose} />
+      <NewViewDialog
+        open={open}
+        handleClose={handleClose}
+        changeCurrentView={changeCurrentView}
+      />
       <LoadViewDialog
         open={openLoadView}
         handleClose={handleLoadViewClose}

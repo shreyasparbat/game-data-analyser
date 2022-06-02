@@ -100,7 +100,7 @@ export default function ChartGrid() {
         items={currentView.items}
         onRemoveItem={onRemoveItem}
         onAddItem={onAddItem}
-        originalItems={charts.map((chart) => chart.id)}
+        originalItems={allCharts.map((chart) => chart.id)}
         changeCurrentView={changeCurrentView}
       />
       <ResponsiveGridLayout
@@ -114,7 +114,7 @@ export default function ChartGrid() {
         onLayoutChange={onLayoutChange}
         onBreakpointChange={onBreakpointChange}
       >
-        {currentView.items.map((item) => {
+        {(currentView.items ?? []).map((item) => {
           // Calculate correct height for this chart
           const thisBreak = currentView.layouts[currentBreakpoint]
           const thisLayout = thisBreak
