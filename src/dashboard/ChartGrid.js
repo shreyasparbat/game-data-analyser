@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import '/node_modules/react-grid-layout/css/styles.css'
 import '/node_modules/react-resizable/css/styles.css'
@@ -6,10 +6,10 @@ import useWindowDimensions from '../util/useWindowDimensions'
 import TopBar from './TopBar'
 import LineReChart from './charts/LineReChart'
 import ChartCard from './ChartCard'
+import { readData, readView } from '../../services/api'
+import { updateView } from '../../../game-data-firebase/functions/views'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
-
-const originalItems = ['a', 'b', 'c', 'd']
 
 const initialLayouts = {
   lg: [
@@ -21,10 +21,7 @@ const initialLayouts = {
 }
 
 const componentList = {
-  a: LineReChart,
-  b: LineReChart,
-  c: LineReChart,
-  d: LineReChart,
+  'line': LineReChart,
 }
 
 const rowHeight = 120
@@ -54,36 +51,52 @@ export default function ChartGrid() {
   // Get current window dimensions
   const { width } = useWindowDimensions()
 
-  // Item State
-  const [items, setItems] = useState(originalItems)
+  // Current view ID
+  const [currentViewId, setCurrentViewId] = useState('Default')
 
-  // Layout State
-  const [layouts, setLayouts] = useState(getFromLS('layouts') || initialLayouts)
+  // Current view
+  const [currentView, setCurrentView] = useState({})
+
+  // All State
+  const [allCharts, setAllCharts] = useState([])
 
   // To know which breakpoint to use in layouts
   const [currentBreakpoint, setCurrentBreakout] = useState('lg')
 
-  // 
-  const [currentView, setCurrentView] = useState(null)
+  // Get data before mount
+  useEffect(async () => {
+    // Get all charts
+    setAllCharts(await readData())
+
+    // Get info on current view and save
+    setCurrentView(readView(currentViewId))
+  })
 
   // Update layout state
-  const onLayoutChange = (currentLayout, allLayouts) => {
-    setLayouts(allLayouts)
-  }
-
-  // Save layout in DB
-  const onLayoutSave = () => {
-    saveToLS('layouts', layouts)
+  const onLayoutChange = (_, allLayouts) => {
+    setCurrentView({
+      name: currentView.name,
+      items: currentView.items,
+      layouts: allLayouts,
+    })
   }
 
   // Remove item from layout
   const onRemoveItem = (itemId) => {
-    setItems(items.filter((i) => i !== itemId))
+    setCurrentView({
+      name: currentView.name,
+      items: currentView.items.filter((i) => i !== itemId),
+      layouts: currentView.layouts,
+    })
   }
 
   // Add item to layout
   const onAddItem = (itemId) => {
-    setItems([...items, itemId])
+    setCurrentView({
+      name: currentView.name,
+      items: [...currentView.items, itemId],
+      layouts: currentView.layouts,
+    })
   }
 
   // Notify breakpoint changes
@@ -91,23 +104,22 @@ export default function ChartGrid() {
     setCurrentBreakout(newBreakpoint)
   }
 
-  const saveView = (name) => {
-
+  const saveCurrentView = () => {
+    updateView(currentView, currentViewId)
   }
 
   return (
     <>
       <TopBar
-        onLayoutSave={onLayoutSave}
-        items={items}
+        onLayoutSave={saveCurrentView}
+        items={currentView.items}
         onRemoveItem={onRemoveItem}
         onAddItem={onAddItem}
-        originalItems={originalItems}
-        saveView={saveView}
+        originalItems={charts.map((chart) => chart.id)}
       />
       <ResponsiveGridLayout
         className="layout"
-        layout={layouts}
+        layout={currentView.layouts}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
         rowHeight={rowHeight}
@@ -116,21 +128,29 @@ export default function ChartGrid() {
         onLayoutChange={onLayoutChange}
         onBreakpointChange={onBreakpointChange}
       >
-        {items.map((key) => {
-          const thisBreak = layouts[currentBreakpoint]
-          const thisLayout = thisBreak ? thisBreak.find(l => l.i == key) : null
+        {currentView.items.map((item) => {
+          // Calculate correct height for this chart
+          const thisBreak = currentView.layouts[currentBreakpoint]
+          const thisLayout = thisBreak
+            ? thisBreak.find((l) => l.i == chart.id)
+            : null
           const h = thisLayout ? thisLayout.h : 3
           const height = h * rowHeight - 70
+
+          // Find the chart for this item
+          const chart = allCharts.find(c => c.name === item)
+
           return (
             <div
-              key={key}
+              key={item}
               className="widget"
               data-grid={{ w: 3, h: 2, x: 0, y: Infinity }}
             >
               <ChartCard
-                id={key}
+                id={item}
                 onRemoveItem={onRemoveItem}
-                component={componentList[key]}
+                component={componentList[chart.type]}
+                data={chart.data}
                 h={height}
               />
             </div>
