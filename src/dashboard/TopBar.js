@@ -3,6 +3,7 @@ import { Card, IconButton, Box } from '@mui/material'
 import { Save, Download, Add } from '@mui/icons-material'
 import AddList from './AddList'
 import NewViewDialog from './NewViewDialog'
+// import LoadViewDialog from './LoadViewDialog'
 
 export default function TopBar({
   onLayoutSave,
@@ -10,19 +11,30 @@ export default function TopBar({
   onRemoveItem,
   onAddItem,
   originalItems,
-  saveView,
+  changeCurrentView,
 }) {
   // To open/close Save View dialog
   const [open, setOpen] = React.useState(false)
+  const [openLoadView, setOpenLoadView] = React.useState(false)
 
-  // Open dialog
+  // Open new view dialog
   const handleClickOpen = () => {
     setOpen(true)
   }
 
-  // Close dialog
+  // Close new view dialog
   const handleClose = () => {
     setOpen(false)
+  }
+
+  // Open Load view dialog
+  const handleLoadViewClickOpen = () => {
+    setOpenLoadView(true)
+  }
+
+  // Close load view dialog
+  const handleLoadViewClose = () => {
+    setOpenLoadView(false)
   }
 
   return (
@@ -40,7 +52,7 @@ export default function TopBar({
           <IconButton aria-label="save" onClick={onLayoutSave}>
             <Save />
           </IconButton>
-          <IconButton aria-label="load" onClick={() => {}}>
+          <IconButton aria-label="load" onClick={handleLoadViewClickOpen}>
             <Download />
           </IconButton>
           <IconButton aria-label="add" onClick={handleClickOpen}>
@@ -49,6 +61,7 @@ export default function TopBar({
         </Box>
       </Card>
       <NewViewDialog open={open} handleClose={handleClose}/>
+      {/* <LoadViewDialog open={openLoadView} handleClose={handleLoadViewClose}/> */}
     </>
   )
 }

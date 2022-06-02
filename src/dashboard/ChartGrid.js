@@ -6,46 +6,24 @@ import useWindowDimensions from '../util/useWindowDimensions'
 import TopBar from './TopBar'
 import LineReChart from './charts/LineReChart'
 import ChartCard from './ChartCard'
-import { readData, readView } from '../../services/api'
-import { updateView } from '../../../game-data-firebase/functions/views'
+import { readData, readView, updateView } from '../../services/api'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
-const initialLayouts = {
-  lg: [
-    { w: 6, h: 6, x: 0, y: 0, i: 'a', moved: false, static: false },
-    { w: 3, h: 6, x: 9, y: 0, i: 'b', moved: false, static: false },
-    { w: 3, h: 6, x: 6, y: 0, i: 'c', moved: false, static: false },
-    { w: 12, h: 4, x: 0, y: 6, i: 'd', moved: false, static: false },
-  ],
-}
+// const initialLayouts = {
+//   lg: [
+//     { w: 6, h: 6, x: 0, y: 0, i: 'a', moved: false, static: false },
+//     { w: 3, h: 6, x: 9, y: 0, i: 'b', moved: false, static: false },
+//     { w: 3, h: 6, x: 6, y: 0, i: 'c', moved: false, static: false },
+//     { w: 12, h: 4, x: 0, y: 6, i: 'd', moved: false, static: false },
+//   ],
+// }
 
 const componentList = {
   'line': LineReChart,
 }
 
 const rowHeight = 120
-
-function getFromLS(key) {
-  let ls = {}
-  if (global.localStorage) {
-    try {
-      ls = JSON.parse(global.localStorage.getItem('rgl-8')) || {}
-    } catch (e) {}
-  }
-  return ls[key]
-}
-
-function saveToLS(key, value) {
-  if (global.localStorage) {
-    global.localStorage.setItem(
-      'rgl-8',
-      JSON.stringify({
-        [key]: value,
-      })
-    )
-  }
-}
 
 export default function ChartGrid() {
   // Get current window dimensions
@@ -104,8 +82,15 @@ export default function ChartGrid() {
     setCurrentBreakout(newBreakpoint)
   }
 
+  // Update view in Firestore
   const saveCurrentView = () => {
     updateView(currentView, currentViewId)
+  }
+
+  // Change the view given ID
+  const changeCurrentView = (viewId) => {
+    setCurrentViewId(viewId)
+    setCurrentView(readView(viewId))
   }
 
   return (
@@ -116,6 +101,7 @@ export default function ChartGrid() {
         onRemoveItem={onRemoveItem}
         onAddItem={onAddItem}
         originalItems={charts.map((chart) => chart.id)}
+        changeCurrentView={changeCurrentView}
       />
       <ResponsiveGridLayout
         className="layout"
@@ -138,7 +124,7 @@ export default function ChartGrid() {
           const height = h * rowHeight - 70
 
           // Find the chart for this item
-          const chart = allCharts.find(c => c.name === item)
+          const chart = allCharts.find(c => c.id === item)
 
           return (
             <div
