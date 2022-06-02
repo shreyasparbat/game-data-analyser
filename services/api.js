@@ -11,4 +11,6 @@ const readView = viewId => axios.post(baseUrl + 'views-readView', { viewId })
 
 const updateView = (view, viewId) => axios.post(baseUrl + 'views-updateView', {view, viewId})
 
-export { readData, createView, readView, updateView }
+const readViewsInfo = () => axios.post(baseUrl + 'views-readViewNames')
+
+export { readData, createView, readView, updateView, readViewsInfo }
