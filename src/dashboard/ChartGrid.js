@@ -36,9 +36,7 @@ export default function ChartGrid() {
   const [currentView, setCurrentView] = useState({
     name: 'Default',
     items: [],
-    layouts: {
-      lg: []
-    }
+    layouts: {},
   })
 
   // All State
@@ -57,7 +55,7 @@ export default function ChartGrid() {
       setCurrentView((await readView(currentViewId)).data)
     }
     fetchData().catch(console.error)
-  }, [setAllCharts, setCurrentView, currentViewId, allCharts])
+  }, [setAllCharts, setCurrentView])
 
   // Update layout state
   const onLayoutChange = (_, allLayouts) => {
@@ -124,6 +122,9 @@ export default function ChartGrid() {
         onBreakpointChange={onBreakpointChange}
       >
         {currentView.items.map((item) => {
+          // Find the chart for this item
+          const chart = allCharts.find((c) => c.id === item)
+
           // Calculate correct height for this chart
           const thisBreak = currentView.layouts[currentBreakpoint]
           const thisLayout = thisBreak
@@ -131,9 +132,6 @@ export default function ChartGrid() {
             : null
           const h = thisLayout ? thisLayout.h : 3
           const height = h * rowHeight - 70
-
-          // Find the chart for this item
-          const chart = allCharts.find((c) => c.id === item)
 
           return (
             <div

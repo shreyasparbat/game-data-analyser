@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Box from '@mui/material/Box'
-import { List } from '@mui/material'
+import { List, ListItem, ListItemButton, ListItemText } from '@mui/material'
 import { readViewsInfo } from '../../services/api'
 
 export default function NewViewDialog({ open, handleClose,changeCurrentView }) {
@@ -13,7 +13,7 @@ export default function NewViewDialog({ open, handleClose,changeCurrentView }) {
   // Populate available view names
   useEffect(async () => {
     setViewsInfo((await readViewsInfo()).data)
-  }, [viewsInfo, setViewsInfo])
+  }, [setViewsInfo])
 
   // Switch to this view
   const handleSelection = (info) => {
