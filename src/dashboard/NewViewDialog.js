@@ -8,7 +8,11 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { createView } from '../../services/api'
 
-export default function NewViewDialog({ open, handleClose, changeCurrentView }) {
+export default function NewViewDialog({
+  open,
+  handleClose,
+  changeCurrentView,
+}) {
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(false)
 

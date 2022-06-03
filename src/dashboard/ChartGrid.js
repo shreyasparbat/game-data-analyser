@@ -48,10 +48,10 @@ export default function ChartGrid() {
   useEffect(() => {
     const fetchData = async () => {
       setCurrentView((await readView(currentViewId)).data)
+      console.log(currentView)
     }
     fetchData().catch(console.error)
-  }, [setCurrentViewId, setCurrentView])
-
+  }, [currentViewId, setCurrentView])
 
   // Update layout state
   const onLayoutChange = (_, allLayouts) => {
@@ -90,10 +90,9 @@ export default function ChartGrid() {
     updateView(currentView, currentViewId)
   }
 
-  // Change the view given ID
+  // Change the view given ID (this will also update view)
   const changeCurrentView = (viewId) => {
     setCurrentViewId(viewId)
-    setCurrentView(readView(viewId))
   }
 
   return (

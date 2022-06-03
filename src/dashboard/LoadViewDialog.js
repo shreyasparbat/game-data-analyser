@@ -6,7 +6,11 @@ import Box from '@mui/material/Box'
 import { List, ListItem, ListItemButton, ListItemText } from '@mui/material'
 import { readViewsInfo } from '../../services/api'
 
-export default function NewViewDialog({ open, handleClose,changeCurrentView }) {
+export default function NewViewDialog({
+  open,
+  handleClose,
+  changeCurrentView,
+}) {
   // To store view names available
   const [viewsInfo, setViewsInfo] = useState([])
 
