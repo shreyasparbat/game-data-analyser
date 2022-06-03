@@ -20,7 +20,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive)
 // }
 
 const componentList = {
-  'line': LineReChart,
+  line: LineReChart,
 }
 
 const rowHeight = 120
@@ -30,10 +30,16 @@ export default function ChartGrid() {
   const { width } = useWindowDimensions()
 
   // Current view ID
-  const [currentViewId, setCurrentViewId] = useState('Default')
+  const [currentViewId, setCurrentViewId] = useState('fL3Ba1D9JfNxarVmF9dg')
 
   // Current view
-  const [currentView, setCurrentView] = useState({})
+  const [currentView, setCurrentView] = useState({
+    name: 'Default',
+    items: [],
+    layouts: {
+      lg: []
+    }
+  })
 
   // All State
   const [allCharts, setAllCharts] = useState([])
@@ -41,14 +47,17 @@ export default function ChartGrid() {
   // To know which breakpoint to use in layouts
   const [currentBreakpoint, setCurrentBreakout] = useState('lg')
 
-  // Get data before mount
-  useEffect(async () => {
-    // Get all charts
-    setAllCharts(await readData())
+  // Get data and set state
+  useEffect(() => {
+    const fetchData = async () => {
+      // Get all charts
+      setAllCharts((await readData()).data)
 
-    // Get info on current view and save
-    setCurrentView(readView(currentViewId))
-  })
+      // Get info on current view and save
+      setCurrentView((await readView(currentViewId)).data)
+    }
+    fetchData().catch(console.error)
+  }, [setAllCharts, setCurrentView, currentViewId, allCharts])
 
   // Update layout state
   const onLayoutChange = (_, allLayouts) => {
@@ -114,7 +123,7 @@ export default function ChartGrid() {
         onLayoutChange={onLayoutChange}
         onBreakpointChange={onBreakpointChange}
       >
-        {(currentView.items ?? []).map((item) => {
+        {currentView.items.map((item) => {
           // Calculate correct height for this chart
           const thisBreak = currentView.layouts[currentBreakpoint]
           const thisLayout = thisBreak
@@ -124,7 +133,7 @@ export default function ChartGrid() {
           const height = h * rowHeight - 70
 
           // Find the chart for this item
-          const chart = allCharts.find(c => c.id === item)
+          const chart = allCharts.find((c) => c.id === item)
 
           return (
             <div

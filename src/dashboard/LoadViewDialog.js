@@ -12,10 +12,8 @@ export default function NewViewDialog({ open, handleClose,changeCurrentView }) {
 
   // Populate available view names
   useEffect(async () => {
-    const v = await readViewsInfo()
-    setViewsInfo(v)
-    console.log(v)
-  })
+    setViewsInfo((await readViewsInfo()).data)
+  }, [viewsInfo, setViewsInfo])
 
   // Switch to this view
   const handleSelection = (info) => {

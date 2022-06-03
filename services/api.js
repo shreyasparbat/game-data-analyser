@@ -3,6 +3,8 @@ import axios from 'axios'
 // Base url for al functions
 const baseUrl = 'https://us-central1-ethlas-test.cloudfunctions.net/'
 
+// Create 
+
 const readData = () => axios.post(baseUrl + 'data-readData')
 
 const createView = view => axios.post(baseUrl + 'views-createView', { view })

@@ -32,7 +32,7 @@ export default function NewViewDialog({ open, handleClose, changeC }) {
     createView({
       name,
       layout: {},
-    }).then(({id}) => {
+    }).then(({ data: { id } }) => {
       // Change current view
       changeCurrentView(id)
 
