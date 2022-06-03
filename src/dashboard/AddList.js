@@ -69,7 +69,7 @@ export default function AddList({
                       name={i}
                     />
                   }
-                  label={items[i]}
+                  label={originalItems[i]}
                   key={i}
                 />
               ))}
