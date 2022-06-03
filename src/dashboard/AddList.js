@@ -10,13 +10,6 @@ import {
 } from '@mui/material'
 import { AddCircleOutlined } from '@mui/icons-material'
 
-const widgetNames = {
-  a: 'Line Chart',
-  b: 'Area Chart',
-  c: 'Bar Chart',
-  d: 'Scatter Chart',
-}
-
 export default function AddList({
   items,
   onRemoveItem,
@@ -76,7 +69,7 @@ export default function AddList({
                       name={i}
                     />
                   }
-                  label={widgetNames[i]}
+                  label={items[i]}
                   key={i}
                 />
               ))}

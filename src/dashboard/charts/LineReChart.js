@@ -56,7 +56,14 @@ const data = [
   },
 ]
 
-export default function LineReChart({ h }) {
+const colours = ['red', 'orange', 'green']
+
+const dataKeys = {
+  'MAU': ['value'],
+  'Avg Monthly Co-op Battle Completion': ['Started', 'Completed']
+}
+
+export default function LineReChart({ h, data, id }) {
   return (
     <ResponsiveContainer width="99%" height={h}>
       <LineChart
@@ -69,17 +76,18 @@ export default function LineReChart({ h }) {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
+        <XAxis dataKey="date" />
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line
-          type="monotone"
-          dataKey="pv"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
-        />
-        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+        {dataKeys[id].map((key, idx) => (
+            <Line
+              type="monotone"
+              dataKey={key}
+              stroke={colours[idx]}
+              activeDot={{ r: 8 }}
+            />
+          ))}
       </LineChart>
     </ResponsiveContainer>
   )

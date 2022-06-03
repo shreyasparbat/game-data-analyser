@@ -10,15 +10,6 @@ import { readData, readView, updateView } from '../../services/api'
 
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
-// const initialLayouts = {
-//   lg: [
-//     { w: 6, h: 6, x: 0, y: 0, i: 'a', moved: false, static: false },
-//     { w: 3, h: 6, x: 9, y: 0, i: 'b', moved: false, static: false },
-//     { w: 3, h: 6, x: 6, y: 0, i: 'c', moved: false, static: false },
-//     { w: 12, h: 4, x: 0, y: 6, i: 'd', moved: false, static: false },
-//   ],
-// }
-
 const componentList = {
   line: LineReChart,
 }
@@ -45,17 +36,22 @@ export default function ChartGrid() {
   // To know which breakpoint to use in layouts
   const [currentBreakpoint, setCurrentBreakout] = useState('lg')
 
-  // Get data and set state
+  // Update charts at the begining
   useEffect(() => {
     const fetchData = async () => {
-      // Get all charts
       setAllCharts((await readData()).data)
-
-      // Get info on current view and save
-      setCurrentView((await readView(currentViewId)).data)
     }
     fetchData().catch(console.error)
   }, [setAllCharts, setCurrentView])
+
+  // Update view whenever view ID is updated
+  useEffect(() => {
+    const fetchData = async () => {
+      setCurrentView((await readView(currentViewId)).data)
+    }
+    fetchData().catch(console.error)
+  }, [setCurrentViewId, setCurrentView])
+
 
   // Update layout state
   const onLayoutChange = (_, allLayouts) => {
@@ -128,7 +124,7 @@ export default function ChartGrid() {
           // Calculate correct height for this chart
           const thisBreak = currentView.layouts[currentBreakpoint]
           const thisLayout = thisBreak
-            ? thisBreak.find((l) => l.i == chart.id)
+            ? thisBreak.find((l) => l.i == item)
             : null
           const h = thisLayout ? thisLayout.h : 3
           const height = h * rowHeight - 70
@@ -142,7 +138,7 @@ export default function ChartGrid() {
               <ChartCard
                 id={item}
                 onRemoveItem={onRemoveItem}
-                component={componentList[chart.type]}
+                component={componentList[chart ? chart.type : 0]}
                 data={chart.data}
                 h={height}
               />
